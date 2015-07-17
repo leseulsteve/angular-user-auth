@@ -1,0 +1,25 @@
+{
+  "name": "leseulsteve-user-auth",
+  "version": "1.0.0",
+  "authors": [
+    "Steve Boisvert"
+  ],
+  "private": "true",
+  "main": "./dist/leseulsteve-user-auth.js",
+  "ignore": [
+    "package.json",
+    "Gruntfile.js",
+    ".travis.yml",
+    ".jshintrc",
+    ".jsbeautifyrc",
+    ".gitignore",
+    ".gitattributes",
+    ".editorconfig",
+    ".bowerrc",
+    "src/"
+  ],
+  "dependencies": {
+    "angular": "~1.4.1",
+    "lodash": "~3.10.0"
+  }
+}
