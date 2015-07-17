@@ -20,6 +20,7 @@
   ],
   "dependencies": {
     "angular": "~1.4.1",
+    "angular-animate": "~1.4.1",
     "lodash": "~3.10.0"
   }
 }
