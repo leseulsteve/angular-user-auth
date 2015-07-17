@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('leseulsteve.userAuth', ['ngCookies', 'http-auth-interceptor', 'ngResource']);;
+angular.module('leseulsteve.userAuth', ['ngAnimate']);;
 'use strict';
 
 angular.module('leseulsteve.userAuth')

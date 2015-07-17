@@ -96,6 +96,26 @@ module.exports = function (grunt) {
           dest: 'temp'
         }]
       }
+    },
+
+    autoprefixer: {
+      dist: {
+        files: {
+          'dist/leseulsteve-user-auth.css': 'src/css/user-auth.css'
+        }
+      }
+    },
+
+    cssmin: {
+      dist: {
+        files: [{
+          expand: true,
+          cwd: 'dist',
+          src: ['*.css', '!*.min.css'],
+          dest: 'dist',
+          ext: '.min.css'
+        }]
+      }
     }
   });
 
@@ -106,6 +126,8 @@ module.exports = function (grunt) {
     'ngAnnotate:build',
     'concat',
     'uglify:build',
+    'autoprefixer:dist',
+    'cssmin:dist',
     'clean:buildTemp'
   ]);
 };

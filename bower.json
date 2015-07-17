@@ -5,7 +5,10 @@
     "Steve Boisvert"
   ],
   "private": "true",
-  "main": "./dist/leseulsteve-user-auth.js",
+  "main": [
+    "./dist/leseulsteve-user-auth.js",
+    "./dist/leseulsteve-user-auth.css"
+  ],
   "ignore": [
     "package.json",
     "Gruntfile.js",
