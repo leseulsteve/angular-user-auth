@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('leseulsteve.userAuth', ['ngAnimate']);
+angular.module('leseulsteve.userAuth', ['ngAnimate', 'LocalStorageModule']);

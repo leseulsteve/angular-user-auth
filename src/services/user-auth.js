@@ -12,14 +12,18 @@ angular.module('leseulsteve.userAuth')
           _.extend(config, value);
         },
 
-        $get: function($rootScope) {
+        $get: function($http, localStorageService, $rootScope) {
           
           return {
 
             config: config,
 
             login: function(credentials) {
-              $rootScope.$broadcast('UserAuth:login:success', credentials);
+              return $http.post(config.backend.paths.login, credentials).then(function(response) {
+                localStorageService.set('token', response.data.token.id);
+                localStorageService.set('token-expiration', response.data.token.expiration);
+                $rootScope.$broadcast('UserAuth:login:success', credentials);
+              });
             }
           };
         }
