@@ -33,7 +33,7 @@ angular.module('leseulsteve.userAuth').config(
     ]);
   });
 
-angular.module('leseulsteve.userAuth').run(
+/*angular.module('leseulsteve.userAuth').run(
 
   /*function ($rootScope, IAMUserAuth, $state, $location) {
 
@@ -65,5 +65,5 @@ angular.module('leseulsteve.userAuth').run(
             goToLogin(toParams);
           }
         }
-      });*/
-  });
+      });
+  });*/

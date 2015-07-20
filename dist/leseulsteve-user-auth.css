@@ -15,7 +15,7 @@
   }
 }
 
-.shake-add {
+[login-form].shake-add {
   -webkit-animation: shake 1s;
           animation: shake 1s;
 }

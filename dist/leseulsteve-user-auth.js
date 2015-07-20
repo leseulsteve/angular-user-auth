@@ -1,13 +1,13 @@
 'use strict';
 
-angular.module('leseulsteve.userAuth', ['ngAnimate']);;
+angular.module('leseulsteve.userAuth', ['ngAnimate', 'LocalStorageModule']);;
 'use strict';
 
 angular.module('leseulsteve.userAuth')
   .provider('UserAuth',
     function() {
 
-      var config;
+      var config = {};
 
       return {
 
@@ -15,13 +15,21 @@ angular.module('leseulsteve.userAuth')
           _.extend(config, value);
         },
 
-        $get: function() {
+        $get: ['$http', 'localStorageService', '$rootScope', function($http, localStorageService, $rootScope) {
           
           return {
 
-            config: config
+            config: config,
+
+            login: function(credentials) {
+              return $http.post(config.backend.paths.login, credentials).then(function(response) {
+                localStorageService.set('token', response.data.token.id);
+                localStorageService.set('token-expiration', response.data.token.expiration);
+                $rootScope.$broadcast('UserAuth:login:success', credentials);
+              });
+            }
           };
-        }
+        }]
 
       };
     });;
@@ -45,10 +53,14 @@ angular.module('leseulsteve.userAuth').directive('loginForm',
 
 				scope.login = function(loginForm, credentials) {
 
-					if (loginForm.invalid && UserAuth.config.animateForm) {
+					if (loginForm.$invalid && UserAuth.config.loginForm.animate) {
 						$animate.addClass(element, 'shake').then(function() {
 							$animate.removeClass(element, 'shake');
 						});
+					}
+
+					if (loginForm.$valid) {
+						UserAuth.login(credentials);
 					}
 				};
 			},
