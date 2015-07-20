@@ -12,6 +12,6 @@
   }
 }
 
-.shake-add {
+[login-form].shake-add {
   animation: shake 1s;
 }

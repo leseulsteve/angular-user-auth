@@ -4,7 +4,7 @@ angular.module('leseulsteve.userAuth')
   .provider('UserAuth',
     function() {
 
-      var config;
+      var config = {};
 
       return {
 
@@ -12,11 +12,15 @@ angular.module('leseulsteve.userAuth')
           _.extend(config, value);
         },
 
-        $get: function() {
+        $get: function($rootScope) {
           
           return {
 
-            config: config
+            config: config,
+
+            login: function(credentials) {
+              $rootScope.$broadcast('UserAuth:login:success', credentials);
+            }
           };
         }
 

@@ -18,10 +18,14 @@ angular.module('leseulsteve.userAuth').directive('loginForm',
 
 				scope.login = function(loginForm, credentials) {
 
-					if (loginForm.invalid && UserAuth.config.animateForm) {
+					if (loginForm.$invalid && UserAuth.config.loginForm.animate) {
 						$animate.addClass(element, 'shake').then(function() {
 							$animate.removeClass(element, 'shake');
 						});
+					}
+
+					if (loginForm.$valid) {
+						UserAuth.login(credentials);
 					}
 				};
 			},
