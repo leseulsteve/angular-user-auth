@@ -8,7 +8,7 @@ angular.module('leseulsteve.userAuth').directive('loginForm',
 			// terminal: true,
 			// scope: {}, // {} = isolate, true = child, false/undefined = no change
 			// require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
-			restrict: 'E', // E = Element, A = Attribute, C = Class, M = Comment
+			restrict: 'A', // E = Element, A = Attribute, C = Class, M = Comment
 			// template: '',
 			// templateUrl: '',
 			// replace: true,

@@ -63,6 +63,7 @@ module.exports = function (grunt) {
       dist: {
         src: [
           'temp/app.js',
+          'temp/config/**/*.js',
           'temp/services/**/*.js',
           'temp/directives/**/*.js'
         ],
