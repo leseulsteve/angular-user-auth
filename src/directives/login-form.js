@@ -16,16 +16,16 @@ angular.module('leseulsteve.userAuth').directive('loginForm',
 			// compile: function (tElement) {},  
 			link: function(scope, element) {
 
-				scope.login = function(loginForm, credentials) {
+				scope.signin = function(signinForm, credentials) {
 
-					if (loginForm.$invalid && UserAuth.config.loginForm.animate) {
+					if (signinForm.$invalid && UserAuth.config.signinForm.animate) {
 						$animate.addClass(element, 'shake').then(function() {
 							$animate.removeClass(element, 'shake');
 						});
 					}
 
-					if (loginForm.$valid) {
-						UserAuth.login(credentials);
+					if (signinForm.$valid) {
+						UserAuth.signin(credentials);
 					}
 				};
 			},

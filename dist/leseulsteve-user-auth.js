@@ -83,33 +83,42 @@ angular.module('leseulsteve.userAuth')
           _.extend(config, value);
         },
 
-        $get: ['$http', 'localStorageService', '$rootScope', function($http, localStorageService, $rootScope) {
+        $get: ['$http', '$location', 'localStorageService', '$rootScope', function($http, $location, localStorageService, $rootScope) {
 
           return {
 
             config: config,
 
-            login: function(credentials) {
-              return $http.post(config.backend.paths.login, credentials).then(function(response) {
+            signin: function(credentials) {
+              return $http.post(config.apiRoot + '/auth/signin', credentials).then(function(response) {
                 localStorageService.set('token', response.data.token.id);
                 localStorageService.set('token-expiration', response.data.token.expiration);
-                return $injector.get(config.userFactoryName).findOne(response.data.user._id).then(function(user) {
-                  $rootScope.$broadcast('UserAuth:login:success', user);
-                  return user;
-                });
+                $rootScope.$broadcast('UserAuth:signin:success', response.data.user);
               }).catch(function(response) {
-                $rootScope.$broadcast('UserAuth:login:fail', response.data.message);
+                $rootScope.$broadcast('UserAuth:signin:fail', response.data.message);
               });
             },
 
-            resetPassword: function(userName) {
-              return $http.post(config.backend.paths.login, {
+            sendPasswordToken: function(username) {
+              return $http.post(config.apiRoot + '/auth/send_password_token', {
                 username: username,
-                urlRedirection: config.resetPassword.urlRedirection
+                urlRedirection: config.sendPasswordToken.urlRedirection
               }).then(function(response) {
-                $rootScope.$broadcast('UserAuth:resetPassword:success');
+                $rootScope.$broadcast('UserAuth:sendPasswordToken:success');
               }).catch(function(response) {
-                $rootScope.$broadcast('UserAuth:resetPassword:fail', response.data.message);
+                $rootScope.$broadcast('UserAuth:sendPasswordToken:fail', response.data.message);
+              });
+            },
+
+            changePassword: function(newPassword) {
+              var token = $location.search().token;
+              localStorageService.set('token', token);
+              return $http.post(config.apiRoot + '/auth/send_password_token', {
+                newPassword: newPassword
+              }).then(function(response) {
+                $rootScope.$broadcast('UserAuth:changePassword:success');
+              }).catch(function(response) {
+                $rootScope.$broadcast('UserAuth:changePassword:fail', response.data.message);
               });
             }
           };
@@ -134,16 +143,16 @@ angular.module('leseulsteve.userAuth').directive('loginForm',
 			// compile: function (tElement) {},  
 			link: function(scope, element) {
 
-				scope.login = function(loginForm, credentials) {
+				scope.signin = function(signinForm, credentials) {
 
-					if (loginForm.$invalid && UserAuth.config.loginForm.animate) {
+					if (signinForm.$invalid && UserAuth.config.signinForm.animate) {
 						$animate.addClass(element, 'shake').then(function() {
 							$animate.removeClass(element, 'shake');
 						});
 					}
 
-					if (loginForm.$valid) {
-						UserAuth.login(credentials);
+					if (signinForm.$valid) {
+						UserAuth.signin(credentials);
 					}
 				};
 			},
