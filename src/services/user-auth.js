@@ -13,7 +13,7 @@ angular.module('leseulsteve.userAuth')
         },
 
         $get: function($http, localStorageService, $rootScope) {
-          
+
           return {
 
             config: config,
@@ -22,7 +22,19 @@ angular.module('leseulsteve.userAuth')
               return $http.post(config.backend.paths.login, credentials).then(function(response) {
                 localStorageService.set('token', response.data.token.id);
                 localStorageService.set('token-expiration', response.data.token.expiration);
-                $rootScope.$broadcast('UserAuth:login:success', credentials);
+                return $injector.get(config.userFactoryName).findOne(response.data.user._id).then(function(user) {
+                  $rootScope.$broadcast('UserAuth:login:success', user);
+                  return user;
+                });
+              });
+            },
+
+            resetPassword: function(userName) {
+              return $http.post(config.backend.paths.login, {
+                username: username,
+                urlRedirection: config.resetPassword.urlRedirection
+              }).then(function(response) {
+                $rootScope.$broadcast('UserAuth:resetPassword:success');
               });
             }
           };
