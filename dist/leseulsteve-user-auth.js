@@ -5,15 +5,15 @@ angular.module('leseulsteve.userAuth', ['ngAnimate', 'LocalStorageModule']);;
 
 angular.module('leseulsteve.userAuth').config(
 
-  ['localStorageServiceProvider', '$httpProvider', function (localStorageServiceProvider, $httpProvider) {
+  ['localStorageServiceProvider', '$httpProvider', function(localStorageServiceProvider, $httpProvider) {
 
     localStorageServiceProvider.setPrefix('userAuth');
 
-    $httpProvider.interceptors.push(['$q', '$window', '$rootScope',
-      function ($q, localStorageService, $rootScope) {
+    $httpProvider.interceptors.push(
+      ['$q', 'localStorageService', '$rootScope', function($q, localStorageService, $rootScope) {
         return {
 
-          request: function (config) {
+          request: function(config) {
             config.headers = config.headers || {};
             var tokenId = localStorageService.get('token');
             if (token) {
@@ -22,18 +22,17 @@ angular.module('leseulsteve.userAuth').config(
             return config;
           },
 
-          responseError: function (rejection) {
+          responseError: function(rejection) {
             switch (rejection.status) {
-            case 401:
-              $rootScope.$broadcast('UserAuth:request:unauthorized', rejection);
-              break;
+              case 401:
+                $rootScope.$broadcast('UserAuth:request:unauthorized', rejection);
+                break;
             }
 
             return $q.reject(rejection);
           }
         };
-      }
-    ]);
+      }]);
   }]);
 
 /*angular.module('leseulsteve.userAuth').run(
@@ -99,7 +98,6 @@ angular.module('leseulsteve.userAuth')
             }
           };
         }]
-
       };
     });;
 'use strict';

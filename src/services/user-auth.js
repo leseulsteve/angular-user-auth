@@ -27,6 +27,5 @@ angular.module('leseulsteve.userAuth')
             }
           };
         }
-
       };
     });
