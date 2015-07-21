@@ -15,9 +15,9 @@ angular.module('leseulsteve.userAuth').config(
 
           request: function(config) {
             config.headers = config.headers || {};
-            var tokenId = localStorageService.get('token');
+            var token = localStorageService.get('token');
             if (token) {
-              config.headers.Authorization = 'Bearer ' + JSON.parse(token);
+              config.headers.Authorization = 'Bearer ' + token;
             }
             return config;
           },
@@ -84,7 +84,7 @@ angular.module('leseulsteve.userAuth')
         },
 
         $get: ['$http', 'localStorageService', '$rootScope', function($http, localStorageService, $rootScope) {
-          
+
           return {
 
             config: config,
@@ -93,7 +93,23 @@ angular.module('leseulsteve.userAuth')
               return $http.post(config.backend.paths.login, credentials).then(function(response) {
                 localStorageService.set('token', response.data.token.id);
                 localStorageService.set('token-expiration', response.data.token.expiration);
-                $rootScope.$broadcast('UserAuth:login:success', credentials);
+                return $injector.get(config.userFactoryName).findOne(response.data.user._id).then(function(user) {
+                  $rootScope.$broadcast('UserAuth:login:success', user);
+                  return user;
+                });
+              }).catch(function(response) {
+                $rootScope.$broadcast('UserAuth:login:fail', response.data.message);
+              });
+            },
+
+            resetPassword: function(userName) {
+              return $http.post(config.backend.paths.login, {
+                username: username,
+                urlRedirection: config.resetPassword.urlRedirection
+              }).then(function(response) {
+                $rootScope.$broadcast('UserAuth:resetPassword:success');
+              }).catch(function(response) {
+                $rootScope.$broadcast('UserAuth:resetPassword:fail', response.data.message);
               });
             }
           };
