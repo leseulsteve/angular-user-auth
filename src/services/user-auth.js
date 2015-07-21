@@ -26,6 +26,8 @@ angular.module('leseulsteve.userAuth')
                   $rootScope.$broadcast('UserAuth:login:success', user);
                   return user;
                 });
+              }).catch(function(response) {
+                $rootScope.$broadcast('UserAuth:login:fail', response.data.message);
               });
             },
 
@@ -35,6 +37,8 @@ angular.module('leseulsteve.userAuth')
                 urlRedirection: config.resetPassword.urlRedirection
               }).then(function(response) {
                 $rootScope.$broadcast('UserAuth:resetPassword:success');
+              }).catch(function(response) {
+                $rootScope.$broadcast('UserAuth:resetPassword:fail', response.data.message);
               });
             }
           };

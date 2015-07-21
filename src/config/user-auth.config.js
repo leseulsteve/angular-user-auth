@@ -12,9 +12,9 @@ angular.module('leseulsteve.userAuth').config(
 
           request: function(config) {
             config.headers = config.headers || {};
-            var tokenId = localStorageService.get('token');
+            var token = localStorageService.get('token');
             if (token) {
-              config.headers.Authorization = 'Bearer ' + JSON.parse(token);
+              config.headers.Authorization = 'Bearer ' + token;
             }
             return config;
           },
