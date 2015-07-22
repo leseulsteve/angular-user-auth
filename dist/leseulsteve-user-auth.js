@@ -85,41 +85,72 @@ angular.module('leseulsteve.userAuth')
 
         $get: ['$http', '$location', 'localStorageService', '$rootScope', function($http, $location, localStorageService, $rootScope) {
 
+          var apiUrls = {
+            signin: 'signin',
+            sendPasswordToken: 'send_password_token',
+            changePassword: 'change_passport',
+            signup: 'signup',
+            confirmEmail: 'confirm_email'
+          };
+
+          _.forOwn(apiUrls, function(url) {
+            url = config.apiRoot + '/auth/' + url;
+          });
+
+          function broadCast(service, callHttp) {
+            return callHttp.then(function(response) {
+              $rootScope.$broadcast('UserAuth:' + service + ':success', response.data);
+              return response.data;
+            }).catch(function(response) {
+              $rootScope.$broadcast('UserAuth:' + service + ':fail', response.data);
+              return response.data;
+            });
+          }
+
+          function setToken(response) {
+            if (response) {
+              localStorageService.set('token', response.data.token.id);
+              localStorageService.set('token-expiration', response.data.token.expiration);
+            } else {
+              var token = $location.search().token;
+              localStorageService.set('token', token);
+            }
+          }
+
           return {
 
             config: config,
 
             signin: function(credentials) {
-              return $http.post(config.apiRoot + '/auth/signin', credentials).then(function(response) {
-                localStorageService.set('token', response.data.token.id);
-                localStorageService.set('token-expiration', response.data.token.expiration);
+              return $http.post(apiUrls.signin, credentials).then(function(response) {
+                setToken(response);
                 $rootScope.$broadcast('UserAuth:signin:success', response.data.user);
               }).catch(function(response) {
-                $rootScope.$broadcast('UserAuth:signin:fail', response.data.message);
+                $rootScope.$broadcast('UserAuth:signin:fail', response.data);
               });
             },
 
             sendPasswordToken: function(username) {
-              return $http.post(config.apiRoot + '/auth/send_password_token', {
+              return broadCast('sendPasswordToken', $http.post(apiUrls.sendPasswordToken, {
                 username: username,
                 urlRedirection: config.sendPasswordToken.urlRedirection
-              }).then(function(response) {
-                $rootScope.$broadcast('UserAuth:sendPasswordToken:success');
-              }).catch(function(response) {
-                $rootScope.$broadcast('UserAuth:sendPasswordToken:fail', response.data.message);
-              });
+              }));
             },
 
             changePassword: function(newPassword) {
-              var token = $location.search().token;
-              localStorageService.set('token', token);
-              return $http.post(config.apiRoot + '/auth/change_passport', {
+              setToken();
+              return broadCast('changePassword', $http.post(apiUrls.changePassword, {
                 newPassword: newPassword
-              }).then(function(response) {
-                $rootScope.$broadcast('UserAuth:changePassword:success');
-              }).catch(function(response) {
-                $rootScope.$broadcast('UserAuth:changePassword:fail', response.data.message);
-              });
+              }));
+            },
+
+            signup: function(user) {
+              return broadCast('signup', $http.post(apiUrls.signup, user));
+            },
+
+            confirmEmail: function() {
+              setToken();
+              return broadCast('confirmEmail', $http.post(apiUrls.confirmEmail));
             }
           };
         }]
