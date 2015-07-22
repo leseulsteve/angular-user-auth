@@ -113,7 +113,7 @@ angular.module('leseulsteve.userAuth')
             changePassword: function(newPassword) {
               var token = $location.search().token;
               localStorageService.set('token', token);
-              return $http.post(config.apiRoot + '/auth/send_password_token', {
+              return $http.post(config.apiRoot + '/auth/change_passport', {
                 newPassword: newPassword
               }).then(function(response) {
                 $rootScope.$broadcast('UserAuth:changePassword:success');
