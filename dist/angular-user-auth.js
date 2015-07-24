@@ -1,21 +1,19 @@
 'use strict';
 
-angular.module('leseulsteve.userAuth', ['ngAnimate', 'LocalStorageModule']);;
+angular.module('leseulsteve.userAuth', ['ngAnimate']);;
 'use strict';
 
 angular.module('angular.userAuth').config(
 
-  ['localStorageServiceProvider', '$httpProvider', function(localStorageServiceProvider, $httpProvider) {
-
-    localStorageServiceProvider.setPrefix('userAuth');
+  ['$httpProvider', function($httpProvider) {
 
     $httpProvider.interceptors.push(
-      ['$q', 'localStorageService', '$rootScope', function($q, localStorageService, $rootScope) {
+      ['$q', '$window', '$rootScope', function($q, $window, $rootScope) {
         return {
 
           request: function(config) {
             config.headers = config.headers || {};
-            var token = localStorageService.get('token');
+            var token = $window.localstorage.getItem('token');
             if (token) {
               config.headers.Authorization = 'Bearer ' + token;
             }
@@ -83,7 +81,7 @@ angular.module('angular.userAuth')
           _.extend(config, value);
         },
 
-        $get: ['$http', '$location', 'localStorageService', '$rootScope', function($http, $location, localStorageService, $rootScope) {
+        $get: ['$http', '$location', '$window', '$rootScope', function($http, $location, $window, $rootScope) {
 
           var apiUrls = {
             signin: 'signin',
@@ -109,11 +107,11 @@ angular.module('angular.userAuth')
 
           function setToken(response) {
             if (response) {
-              localStorageService.set('token', response.data.token.id);
-              localStorageService.set('token-expiration', response.data.token.expiration);
+              $window.localstorage.setItem('token', response.data.token.id);
+              $window.localstorage.setItem('token-expiration', response.data.token.expiration);
             } else {
               var token = $location.search().token;
-              localStorageService.set('token', token);
+              $window.localstorage.setItem('token', token);
             }
           }
 

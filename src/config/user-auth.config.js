@@ -2,17 +2,15 @@
 
 angular.module('angular.userAuth').config(
 
-  function(localStorageServiceProvider, $httpProvider) {
-
-    localStorageServiceProvider.setPrefix('userAuth');
+  function($httpProvider) {
 
     $httpProvider.interceptors.push(
-      function($q, localStorageService, $rootScope) {
+      function($q, $window, $rootScope) {
         return {
 
           request: function(config) {
             config.headers = config.headers || {};
-            var token = localStorageService.get('token');
+            var token = $window.localstorage.getItem('token');
             if (token) {
               config.headers.Authorization = 'Bearer ' + token;
             }

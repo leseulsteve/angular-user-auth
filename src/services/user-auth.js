@@ -12,7 +12,7 @@ angular.module('angular.userAuth')
           _.extend(config, value);
         },
 
-        $get: function($http, $location, localStorageService, $rootScope) {
+        $get: function($http, $location, $window, $rootScope) {
 
           var apiUrls = {
             signin: 'signin',
@@ -38,11 +38,11 @@ angular.module('angular.userAuth')
 
           function setToken(response) {
             if (response) {
-              localStorageService.set('token', response.data.token.id);
-              localStorageService.set('token-expiration', response.data.token.expiration);
+              $window.localstorage.setItem('token', response.data.token.id);
+              $window.localstorage.setItem('token-expiration', response.data.token.expiration);
             } else {
               var token = $location.search().token;
-              localStorageService.set('token', token);
+              $window.localstorage.setItem('token', token);
             }
           }
 
