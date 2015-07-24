@@ -3,7 +3,7 @@
 angular.module('leseulsteve.userAuth', ['ngAnimate', 'LocalStorageModule']);;
 'use strict';
 
-angular.module('leseulsteve.userAuth').config(
+angular.module('angular.userAuth').config(
 
   ['localStorageServiceProvider', '$httpProvider', function(localStorageServiceProvider, $httpProvider) {
 
@@ -71,7 +71,7 @@ angular.module('leseulsteve.userAuth').config(
   });*/;
 'use strict';
 
-angular.module('leseulsteve.userAuth')
+angular.module('angular.userAuth')
   .provider('UserAuth',
     function() {
 
@@ -93,8 +93,8 @@ angular.module('leseulsteve.userAuth')
             confirmEmail: 'confirm_email'
           };
 
-          _.forOwn(apiUrls, function(url) {
-            url = config.apiRoot + '/auth/' + url;
+          _.forOwn(apiUrls, function(url, index) {
+            apiUrls[index] = config.apiRoot + '/auth/' + url;
           });
 
           function broadCast(service, callHttp) {
@@ -144,8 +144,11 @@ angular.module('leseulsteve.userAuth')
               }));
             },
 
-            signup: function(user) {
-              return broadCast('signup', $http.post(apiUrls.signup, user));
+            signup: function(newUser) {
+              return broadCast('signup', $http.post(apiUrls.signup, {
+                newUser: newUser,
+                urlRedirection: config.confirmEmail.urlRedirection
+              }));
             },
 
             confirmEmail: function() {
@@ -158,7 +161,7 @@ angular.module('leseulsteve.userAuth')
     });;
 'use strict';
 
-angular.module('leseulsteve.userAuth').directive('loginForm',
+angular.module('angular.userAuth').directive('loginForm',
 	['$animate', 'UserAuth', function($animate, UserAuth) {
 		return {
 			// name: '',
