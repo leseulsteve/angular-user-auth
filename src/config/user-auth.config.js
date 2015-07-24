@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('leseulsteve.userAuth').config(
+angular.module('angular.userAuth').config(
 
   function(localStorageServiceProvider, $httpProvider) {
 

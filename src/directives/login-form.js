@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('leseulsteve.userAuth').directive('loginForm',
+angular.module('angular.userAuth').directive('loginForm',
 	function($animate, UserAuth) {
 		return {
 			// name: '',

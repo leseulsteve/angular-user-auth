@@ -67,7 +67,7 @@ module.exports = function (grunt) {
           'temp/services/**/*.js',
           'temp/directives/**/*.js'
         ],
-        dest: '<%= yeoman.dist %>/leseulsteve-user-auth.js',
+        dest: '<%= yeoman.dist %>/angular-user-auth.js',
       },
     },
 
@@ -80,7 +80,7 @@ module.exports = function (grunt) {
           preserveComments: false
         },
         files: {
-          '<%= yeoman.dist %>/leseulsteve-user-auth.min.js': '<%= yeoman.dist %>/leseulsteve-user-auth.js',
+          '<%= yeoman.dist %>/angular-user-auth.min.js': '<%= yeoman.dist %>/angular-user-auth.js',
         }
       }
     },
@@ -102,7 +102,7 @@ module.exports = function (grunt) {
     autoprefixer: {
       dist: {
         files: {
-          'dist/leseulsteve-user-auth.css': 'src/css/user-auth.css'
+          'dist/angular-user-auth.css': 'src/css/user-auth.css'
         }
       }
     },

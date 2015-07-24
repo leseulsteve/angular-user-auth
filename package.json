@@ -1,6 +1,6 @@
 {
-  "name": "bowermodule",
-  "version": "0.0.0",
+  "name": "angular-user-auth",
+  "version": "1.0.0",
   "dependencies": {
     "grunt-autoprefixer": "^3.0.3",
     "grunt-contrib-cssmin": "^0.12.3"

@@ -1,13 +1,13 @@
 {
-  "name": "leseulsteve-user-auth",
+  "name": "angular-user-auth",
   "version": "1.0.0",
   "authors": [
     "Steve Boisvert"
   ],
   "private": "true",
   "main": [
-    "./dist/leseulsteve-user-auth.js",
-    "./dist/leseulsteve-user-auth.css"
+    "./dist/angular-user-auth.js",
+    "./dist/angular-user-auth.css"
   ],
   "ignore": [
     "package.json",
