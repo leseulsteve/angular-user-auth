@@ -152,6 +152,10 @@ angular.module('angular.userAuth')
             confirmEmail: function() {
               setToken();
               return broadCast('confirmEmail', $http.post(apiUrls.confirmEmail));
+            },
+
+            isAuthentified: function() {
+              return $window.localstorage.getItem('token', response.data.token.id) && new Date($window.localstorage.getItem('token-expiration')) > new Date();
             }
           };
         }]
