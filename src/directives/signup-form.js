@@ -1,7 +1,5 @@
-'use strict';
-
-angular.module('angular.userAuth').directive('loginForm',
-	function($animate, UserAuth) {
+angular.module('angular.userAuth').directive('signupForm',
+	function(UserAuth) {
 		return {
 			// name: '',
 			// priority: 1,
@@ -16,16 +14,10 @@ angular.module('angular.userAuth').directive('loginForm',
 			// compile: function (tElement) {},  
 			link: function(scope, element) {
 
-				scope.signin = function(signinForm, credentials) {
-
-					if (signinForm.$invalid && UserAuth.config.signinForm.animate) {
-						$animate.addClass(element, 'shake').then(function() {
-							$animate.removeClass(element, 'shake');
-						});
-					}
+				scope.signup = function(signinForm, newUser) {
 
 					if (signinForm.$valid) {
-						UserAuth.signin(credentials);
+						UserAuth.signup(newUser);
 					}
 				};
 			},

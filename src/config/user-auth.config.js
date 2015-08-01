@@ -10,7 +10,7 @@ angular.module('angular.userAuth').config(
 
           request: function(config) {
             config.headers = config.headers || {};
-            var token = $window.localstorage.getItem('token');
+            var token = $window.localStorage.getItem('token');
             if (token) {
               config.headers.Authorization = 'Bearer ' + token;
             }

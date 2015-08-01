@@ -23,7 +23,7 @@ angular.module('angular.userAuth')
           };
 
           _.forOwn(apiUrls, function(url, index) {
-            apiUrls[index] = config.apiRoot + '/auth/' + url;
+            apiUrls[index] = config.apiRoot + 'auth/' + url;
           });
 
           function broadCast(service, callHttp) {
@@ -38,11 +38,11 @@ angular.module('angular.userAuth')
 
           function setToken(response) {
             if (response) {
-              $window.localstorage.setItem('token', response.data.token.id);
-              $window.localstorage.setItem('token-expiration', response.data.token.expiration);
+              $window.localStorage.setItem('token', response.data.token.id);
+              $window.localStorage.setItem('token-expiration', response.data.token.expiration);
             } else {
               var token = $location.search().token;
-              $window.localstorage.setItem('token', token);
+              $window.localStorage.setItem('token', token);
             }
           }
 
@@ -86,7 +86,7 @@ angular.module('angular.userAuth')
             },
 
             isAuthentified: function() {
-              return $window.localstorage.getItem('token', response.data.token.id) && new Date($window.localstorage.getItem('token-expiration')) > new Date();
+              return $window.localStorage.getItem('token') !== null && new Date($window.localStorage.getItem('token-expiration')) > new Date();
             }
           };
         }
