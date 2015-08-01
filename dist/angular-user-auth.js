@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('leseulsteve.userAuth', ['ngAnimate']);;
+angular.module('angular.userAuth', ['ngAnimate']);;
 'use strict';
 
 angular.module('angular.userAuth').config(
