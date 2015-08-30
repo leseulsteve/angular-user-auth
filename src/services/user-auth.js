@@ -12,7 +12,7 @@ angular.module('leseulsteve.angular-user-auth')
           _.extend(config, value);
         },
 
-        $get: function($http, $location, $window, $rootScope) {
+        $get: function($http, $location, $window, $rootScope, $injector) {
 
           var apiUrls = {
             signin: 'signin',
@@ -53,7 +53,8 @@ angular.module('leseulsteve.angular-user-auth')
             signin: function(credentials) {
               return $http.post(apiUrls.signin, credentials).then(function(response) {
                 setToken(response);
-                $rootScope.$broadcast('UserAuth:signin:success', new config.userFactory(response.data.user));
+                var UserSchema = $injector.get(config.userSchema);
+                $rootScope.$broadcast('UserAuth:signin:success', new UserSchema(response.data.user));
               }).catch(function(response) {
                 $rootScope.$broadcast('UserAuth:signin:fail', response.data);
               });
