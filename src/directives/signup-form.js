@@ -1,4 +1,4 @@
-angular.module('angular.userAuth').directive('signupForm',
+angular.module('leseulsteve.angular-user-auth').directive('signupForm',
 	function(UserAuth) {
 		return {
 			// name: '',

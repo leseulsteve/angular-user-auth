@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angular.userAuth').config(
+angular.module('leseulsteve.angular-user-auth').config(
 
   function($httpProvider) {
 

@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('angular.userAuth', ['ngAnimate']);
+angular.module('leseulsteve.angular-user-auth', ['ngAnimate']);

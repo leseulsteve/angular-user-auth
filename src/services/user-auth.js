@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('angular.userAuth')
+angular.module('leseulsteve.angular-user-auth')
   .provider('UserAuth',
     function() {
 
