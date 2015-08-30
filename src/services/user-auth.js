@@ -23,7 +23,7 @@ angular.module('leseulsteve.angular-user-auth')
           };
 
           _.forOwn(apiUrls, function(url, index) {
-            apiUrls[index] = config.apiRoot + 'auth/' + url;
+            apiUrls[index] = (config.apiRoot || '' )+ 'auth/' + url;
           });
 
           function broadCast(service, callHttp) {
@@ -53,7 +53,7 @@ angular.module('leseulsteve.angular-user-auth')
             signin: function(credentials) {
               return $http.post(apiUrls.signin, credentials).then(function(response) {
                 setToken(response);
-                $rootScope.$broadcast('UserAuth:signin:success', response.data.user);
+                $rootScope.$broadcast('UserAuth:signin:success', new config.userFactory(response.data.user));
               }).catch(function(response) {
                 $rootScope.$broadcast('UserAuth:signin:fail', response.data);
               });
