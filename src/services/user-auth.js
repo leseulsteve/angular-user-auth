@@ -23,7 +23,7 @@ angular.module('leseulsteve.angular-user-auth')
           };
 
           _.forOwn(apiUrls, function(url, index) {
-            apiUrls[index] = (config.apiRoot || '' )+ 'auth/' + url;
+            apiUrls[index] = (config.apiRoot || '') + 'auth/' + url;
           });
 
           function broadCast(service, callHttp) {
@@ -46,6 +46,21 @@ angular.module('leseulsteve.angular-user-auth')
             }
           }
 
+          function setCurrentUser(user) {
+            $window.localStorage.setItem('user', JSON.stringify(user));
+          }
+
+          var UserSchema = $injector.get(config.userSchema);
+
+          UserSchema.prototype.isAuthentified = function() {
+            return $window.localStorage.getItem('token') !== null && new Date($window.localStorage.getItem('token-expiration')) > new Date();
+          };
+
+          UserSchema.post('save', function(next) {
+            setCurrentUser(user);
+            next();
+          });
+
           return {
 
             config: config,
@@ -53,8 +68,9 @@ angular.module('leseulsteve.angular-user-auth')
             signin: function(credentials) {
               return $http.post(apiUrls.signin, credentials).then(function(response) {
                 setToken(response);
-                var UserSchema = $injector.get(config.userSchema);
-                $rootScope.$broadcast('UserAuth:signin:success', new UserSchema(response.data.user));
+                var user = new UserSchema(response.data.user);
+                setCurrentUser(user);
+                $rootScope.$broadcast('UserAuth:signin:success', user);
               }).catch(function(response) {
                 $rootScope.$broadcast('UserAuth:signin:fail', response.data);
               });
@@ -86,8 +102,9 @@ angular.module('leseulsteve.angular-user-auth')
               return broadCast('confirmEmail', $http.post(apiUrls.confirmEmail));
             },
 
-            isAuthentified: function() {
-              return $window.localStorage.getItem('token') !== null && new Date($window.localStorage.getItem('token-expiration')) > new Date();
+            getCurrentUser: function() {
+              var data = $window.localStorage.getItem('user');
+              return data ? new UserSchema(JSON.parse(data)) : undefined;
             }
           };
         }
