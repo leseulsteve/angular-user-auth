@@ -47,6 +47,7 @@ angular.module('leseulsteve.angular-user-auth')
           }
 
           function setCurrentUser(user) {
+            $rootScope.currentUser = user;
             $window.localStorage.setItem('user', JSON.stringify(user));
           }
 

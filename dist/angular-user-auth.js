@@ -31,46 +31,22 @@ angular.module('leseulsteve.angular-user-auth').config(
           }
         };
       }]);
-  }]);
-
-/*angular.module('leseulsteve.userAuth').run(
-
-  /*function ($rootScope, IAMUserAuth, $state, $location) {
-
-    function goToLogin(toParams) {
-      $state.go(IAMUserAuth.config.loginStateName, toParams);
-    }
-
-    function autoLogin(toState, toParams) {
-      IAMUserAuth.login(IAMUserAuth.config.autoLogin).then(function () {
-        if (toState.name === IAMUserAuth.config.loginStateName) {
-          $location.path('/');
-        } else {
-          $state.go(toState.name, toParams);
-        }
-      });
-    }
-
-    $rootScope.$on('$stateChangeStart',
-      function (event, toState, toParams) {
-
-        if (!IAMUserAuth.isAuthentified()) {
-
-          if (IAMUserAuth.config.autoLogin) {
-            event.preventDefault();
-            autoLogin(toState, toParams);
-
-          } else if (IAMUserAuth.config.loginStateName && toState.name !== IAMUserAuth.config.loginStateName) {
-            event.preventDefault();
-            goToLogin(toParams);
-          }
-        }
-      });
-  });*/;
+  }]);;
 angular.module('leseulsteve.angular-user-auth').run(
 	['$rootScope', 'UserAuth', function($rootScope, UserAuth) {
 
+		var config = UserAuth.config;
+
 		$rootScope.currentUser = UserAuth.getCurrentUser();
+
+		$rootScope.$on('$stateChangeStart',
+			function(event, toState, toParams) {
+
+				if ((_.isUndefined($rootScope.currentUser) || !$rootScope.currentUser.isAuthentified()) && !_.contains(config.authorizedRoutes, toState.name)) {
+					event.preventDefault();
+					$state.go(config.loginStateName, toParams);
+				}
+			});
 	}]);;
 'use strict';
 
@@ -121,6 +97,7 @@ angular.module('leseulsteve.angular-user-auth')
           }
 
           function setCurrentUser(user) {
+            $rootScope.currentUser = user;
             $window.localStorage.setItem('user', JSON.stringify(user));
           }
 
