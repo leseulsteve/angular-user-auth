@@ -66,6 +66,7 @@ angular.module('leseulsteve.angular-user-auth')
 
           var apiUrls = {
             signin: 'signin',
+            signout: 'signout',
             sendPasswordToken: 'send_password_token',
             changePassword: 'change_passport',
             signup: 'signup',
@@ -124,6 +125,15 @@ angular.module('leseulsteve.angular-user-auth')
                 $rootScope.$broadcast('UserAuth:signin:success', user);
               }).catch(function(response) {
                 $rootScope.$broadcast('UserAuth:signin:fail', response.data);
+              });
+            },
+
+            signout: function() {
+              return broadCast('signout', $http.post(apiUrls.signout)).then(function() {
+                $window.localStorage.removeItem('token-expiration');
+                $window.localStorage.removeItem('token');
+                $window.localStorage.removeItem('user');
+                $rootScope.currentUser = undefined;
               });
             },
 
