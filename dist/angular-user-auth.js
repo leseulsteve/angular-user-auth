@@ -67,6 +67,11 @@ angular.module('leseulsteve.angular-user-auth').config(
         }
       });
   });*/;
+angular.module('leseulsteve.angular-user-auth').run(
+	['$rootScope', 'UserAuth', function($rootScope, UserAuth) {
+
+		$rootScope.currentUser = UserAuth.getCurrentUser();
+	}]);;
 'use strict';
 
 angular.module('leseulsteve.angular-user-auth')
