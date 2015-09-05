@@ -139,7 +139,10 @@ angular.module('leseulsteve.angular-user-auth')
                 $window.localStorage.removeItem('token-expiration');
                 $window.localStorage.removeItem('token');
                 $window.localStorage.removeItem('user');
-                $rootScope.currentUser = undefined;
+                $rootScope.currentUser = {};
+                $rootScope.currentUser.isAuthentified = function() {
+                  return false;
+                }
               });
             },
 
