@@ -59,7 +59,7 @@ angular.module('leseulsteve.angular-user-auth')
           };
 
           UserSchema.post('save', function(next) {
-            setCurrentUser(user);
+            setCurrentUser(this);
             next();
           });
 
