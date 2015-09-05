@@ -33,7 +33,7 @@ angular.module('leseulsteve.angular-user-auth').config(
       }]);
   }]);;
 angular.module('leseulsteve.angular-user-auth').run(
-	['$rootScope', 'UserAuth', function($rootScope, UserAuth) {
+	['$rootScope', '$state', 'UserAuth', function($rootScope, $state, UserAuth) {
 
 		var config = UserAuth.config;
 
@@ -48,7 +48,7 @@ angular.module('leseulsteve.angular-user-auth').run(
 		$rootScope.$on('$stateChangeStart',
 			function(event, toState, toParams) {
 
-				if (!$rootScope.currentUser.isAuthentified() && !_.contains(config.authorizedRoutes, toState.name)) {
+				if (!$rootScope.currentUser.isAuthentified() && !_.contains(config.authorizedRoutes, toState.name) && toState.name !== config.loginStateName) {
 					event.preventDefault();
 					$state.go(config.loginStateName, toParams);
 				}
