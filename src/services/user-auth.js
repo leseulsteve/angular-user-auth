@@ -2,17 +2,17 @@
 
 angular.module('leseulsteve.angular-user-auth')
   .provider('UserAuth',
-    function() {
+    function () {
 
       var config = {};
 
       return {
 
-        config: function(value) {
+        config: function (value) {
           _.extend(config, value);
         },
 
-        $get: function($http, $location, $window, $rootScope, $injector) {
+        $get: function ($http, $location, $window, $rootScope, $injector) {
 
           var apiUrls = {
             signin: 'signin',
@@ -23,15 +23,15 @@ angular.module('leseulsteve.angular-user-auth')
             confirmEmail: 'confirm_email'
           };
 
-          _.forOwn(apiUrls, function(url, index) {
+          _.forOwn(apiUrls, function (url, index) {
             apiUrls[index] = (config.apiRoot || '') + 'auth/' + url;
           });
 
           function broadCast(service, callHttp) {
-            return callHttp.then(function(response) {
+            return callHttp.then(function (response) {
               $rootScope.$broadcast('UserAuth:' + service + ':success', response.data);
               return response.data;
-            }).catch(function(response) {
+            }).catch(function (response) {
               $rootScope.$broadcast('UserAuth:' + service + ':fail', response.data);
               return response.data;
             });
@@ -54,11 +54,11 @@ angular.module('leseulsteve.angular-user-auth')
 
           var UserSchema = $injector.get(config.userSchema);
 
-          UserSchema.prototype.isAuthentified = function() {
+          UserSchema.prototype.isAuthentified = function () {
             return $window.localStorage.getItem('token') !== null && new Date($window.localStorage.getItem('token-expiration')) > new Date();
           };
 
-          UserSchema.post('save', function(next) {
+          UserSchema.post('save', function (next) {
             setCurrentUser(this);
             next();
           });
@@ -67,56 +67,56 @@ angular.module('leseulsteve.angular-user-auth')
 
             config: config,
 
-            signin: function(credentials) {
-              return $http.post(apiUrls.signin, credentials).then(function(response) {
+            signin: function (credentials) {
+              return $http.post(apiUrls.signin, credentials).then(function (response) {
                 setToken(response);
                 var user = new UserSchema(response.data.user);
                 setCurrentUser(user);
                 $rootScope.$broadcast('UserAuth:signin:success', user);
-              }).catch(function(response) {
+              }).catch(function (response) {
                 $rootScope.$broadcast('UserAuth:signin:fail', response.data);
               });
             },
 
-            signout: function() {
-              return broadCast('signout', $http.post(apiUrls.signout)).then(function() {
+            signout: function () {
+              return broadCast('signout', $http.post(apiUrls.signout)).then(function () {
                 $window.localStorage.removeItem('token-expiration');
                 $window.localStorage.removeItem('token');
                 $window.localStorage.removeItem('user');
                 $rootScope.currentUser = {};
-                $rootScope.currentUser.isAuthentified = function() {
+                $rootScope.currentUser.isAuthentified = function () {
                   return false;
-                }
+                };
               });
             },
 
-            sendPasswordToken: function(username) {
+            sendPasswordToken: function (username) {
               return broadCast('sendPasswordToken', $http.post(apiUrls.sendPasswordToken, {
                 username: username,
                 urlRedirection: config.sendPasswordToken.urlRedirection
               }));
             },
 
-            changePassword: function(newPassword) {
+            changePassword: function (newPassword) {
               setToken();
               return broadCast('changePassword', $http.post(apiUrls.changePassword, {
                 newPassword: newPassword
               }));
             },
 
-            signup: function(newUser) {
+            signup: function (newUser) {
               return broadCast('signup', $http.post(apiUrls.signup, {
                 newUser: newUser,
                 urlRedirection: config.confirmEmail.urlRedirection
               }));
             },
 
-            confirmEmail: function() {
+            confirmEmail: function () {
               setToken();
               return broadCast('confirmEmail', $http.post(apiUrls.confirmEmail));
             },
 
-            getCurrentUser: function() {
+            getCurrentUser: function () {
               var data = $window.localStorage.getItem('user');
               return data ? new UserSchema(JSON.parse(data)) : undefined;
             }

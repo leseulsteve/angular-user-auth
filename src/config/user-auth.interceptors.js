@@ -2,13 +2,13 @@
 
 angular.module('leseulsteve.angular-user-auth').config(
 
-  function($httpProvider) {
+  function ($httpProvider) {
 
     $httpProvider.interceptors.push(
-      function($q, $window, $rootScope) {
+      function ($q, $window, $rootScope) {
         return {
 
-          request: function(config) {
+          request: function (config) {
             config.headers = config.headers || {};
             var token = $window.localStorage.getItem('token');
             if (token) {
@@ -17,11 +17,11 @@ angular.module('leseulsteve.angular-user-auth').config(
             return config;
           },
 
-          responseError: function(rejection) {
+          responseError: function (rejection) {
             switch (rejection.status) {
-              case 401:
-                $rootScope.$broadcast('UserAuth:request:unauthorized', rejection);
-                break;
+            case 401:
+              $rootScope.$broadcast('UserAuth:request:unauthorized', rejection);
+              break;
             }
 
             return $q.reject(rejection);

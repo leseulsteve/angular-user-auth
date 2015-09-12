@@ -1,33 +1,30 @@
-// Generated on 2015-03-17 using generator-angular 0.10.0
 'use strict';
-
-// # Globbing
-// for performance reasons we're only matching one level down:
-// 'test/spec/{,*/}*.js'
-// use this if you want to recursively match all subfolders:
-// 'test/spec/**/*.js'
 
 module.exports = function (grunt) {
 
-  // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
-
-  // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
-  // Configurable paths for the application
-  var appConfig = {
-    src: 'scr',
-    dist: 'dist'
-  };
+  var libName = grunt.file.readJSON('bower.json').name;
 
-  // Define the configuration for all the tasks
   grunt.initConfig({
 
-    // Project settings
-    yeoman: appConfig,
+    paths: {
+      src: {
+        base: 'src'
+      },
+      dest: {
+        base: 'dist',
+        js: '<%= paths.dest.base %>/' + libName + '.js',
+        jsMin: '<%= paths.dest.base %>/' + libName + '.min.js',
+        css: '<%= paths.dest.base %>/' + libName + '.css',
+        cssMin: '<%= paths.dest.base %>/' + libName + '.min.css'
+      },
+      temp: {
+        base: 'temp'
+      }
+    },
 
-    // Make sure code styles are up to par and there are no obvious mistakes
     jshint: {
       options: {
         jshintrc: '.jshintrc',
@@ -36,53 +33,26 @@ module.exports = function (grunt) {
       all: {
         src: [
           'Gruntfile.js',
-          '<%= yeoman.src %>/app.js',
-          '<%= yeoman.src %>/**/*.js'
+          '<%= paths.src.base %>/**/*.js'
+        ]
+      }
+    },
+
+    jsbeautifier: {
+      options: {
+        config: '.jsbeautifyrc'
+      },
+      all: {
+        src: [
+          'Gruntfile.js',
+          '<%= paths.src.base %>/**/*.js'
         ]
       }
     },
 
     clean: {
-      build: ['<%= yeoman.dist %>'],
-      buildTemp: ['temp']
-    },
-
-    jsbeautifier: {
-      all: {
-        src: ['Gruntfile.js', '<%= yeoman.src %>/app.js', '<%= yeoman.src %>/**/*.js'],
-        options: {
-          config: '.jsbeautifyrc'
-        }
-      }
-    },
-
-    concat: {
-      options: {
-        separator: ';\n',
-      },
-      dist: {
-        src: [
-          'temp/app.js',
-          'temp/config/**/*.js',
-          'temp/services/**/*.js',
-          'temp/directives/**/*.js'
-        ],
-        dest: '<%= yeoman.dist %>/angular-user-auth.js',
-      },
-    },
-
-    uglify: {
-      build: {
-        options: {
-          mangle: true,
-          compress: true,
-          sourceMap: true,
-          preserveComments: false
-        },
-        files: {
-          '<%= yeoman.dist %>/angular-user-auth.min.js': '<%= yeoman.dist %>/angular-user-auth.js',
-        }
-      }
+      build: ['<%= paths.dest.base %>'],
+      buildTemp: ['<%= paths.temp.base %>']
     },
 
     ngAnnotate: {
@@ -92,43 +62,77 @@ module.exports = function (grunt) {
       build: {
         files: [{
           expand: true,
-          cwd: 'src',
+          cwd: '<%= paths.src.base %>',
           src: ['**/*.js'],
-          dest: 'temp'
+          dest: '<%= paths.temp.base %>'
         }]
+      }
+    },
+
+    concat: {
+      js: {
+        options: {
+          separator: ';\n',
+        },
+        src: [
+          '<%= paths.temp.base %>' + '/app.js',
+          '<%= paths.temp.base %>' + '/config/*.js',
+          '<%= paths.temp.base %>' + '/filters/*.js',
+          '<%= paths.temp.base %>' + '/directives/*.js',
+          '<%= paths.temp.base %>' + '/services/*.js'
+        ],
+        dest: '<%= paths.dest.js %>'
+      },
+      css: {
+        src: '<%= paths.src.base %>/css/*.css',
+        dest: '<%= paths.dest.css %>'
       }
     },
 
     autoprefixer: {
-      dist: {
-        files: {
-          'dist/angular-user-auth.css': 'src/css/user-auth.css'
-        }
+      css: {
+        src: '<%= paths.dest.css %>',
+        dest: '<%= paths.dest.css %>'
       }
     },
 
     cssmin: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: 'dist',
-          src: ['*.css', '!*.min.css'],
-          dest: 'dist',
-          ext: '.min.css'
-        }]
+      build: {
+        options: {
+          shorthandCompacting: false,
+          roundingPrecision: -1,
+          sourceMap: true
+        },
+        files: {
+          '<%= paths.dest.cssMin %>': '<%= paths.dest.css %>'
+        }
+      }
+    },
+
+    uglify: {
+      options: {
+        mangle: true,
+        compress: true,
+        sourceMap: true,
+        preserveComments: false
+      },
+      build: {
+        src: '<%= paths.dest.js %>',
+        dest: '<%= paths.dest.jsMin %>'
       }
     }
   });
 
   grunt.registerTask('build', [
     'clean:build',
-    'jshint:all',
-    'jsbeautifier:all',
+    'newer:jshint:all',
+    'newer:jsbeautifier:all',
     'ngAnnotate:build',
-    'concat',
+    'concat:js',
+    'concat:css',
+    'autoprefixer:css',
+    'cssmin:build',
     'uglify:build',
-    'autoprefixer:dist',
-    'cssmin:dist',
     'clean:buildTemp'
   ]);
 };
