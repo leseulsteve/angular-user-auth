@@ -114,6 +114,10 @@ angular.module('leseulsteve.angular-user-auth').directive('signinForm',
             UserAuth.signin(credentials);
           }
         };
+
+        scope.sendPasswordToken = function (username) {
+          UserAuth.sendPasswordToken(username);
+        };
       }
     };
   }]);
