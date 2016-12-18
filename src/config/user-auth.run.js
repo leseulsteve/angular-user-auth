@@ -16,7 +16,7 @@ angular.module('leseulsteve.angular-user-auth').run(
     $rootScope.$on('$stateChangeStart',
       function (event, toState, toParams) {
 
-        if (!$rootScope.currentUser.isAuthentified() && !_.contains(config.authorizedRoutes, toState.name) && toState.name !== config.loginStateName) {
+        if (!$rootScope.currentUser.isAuthentified() && !_.includes(config.authorizedRoutes, toState.name) && toState.name !== config.loginStateName) {
           event.preventDefault();
           $state.go(config.loginStateName, toParams);
         }
